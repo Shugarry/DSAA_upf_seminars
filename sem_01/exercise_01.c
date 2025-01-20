@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
-int main(int ac, char **av)
+int main(void)
 {
-    int remainder;
-    int num;
+    int	remainder;
+    int	num;
    
-    if (ac != 2)
-        return (0);
-    num = atoi(av[1]);
+    num = pow(10, 9) + 7;
     remainder = num % 7;
     switch (remainder)
     {
@@ -28,5 +27,5 @@ int main(int ac, char **av)
             printf("Tuesday"); break;
     }
     printf("\n");
-    return (0);    
+    return (0); 
 }
