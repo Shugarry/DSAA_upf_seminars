@@ -1,11 +1,12 @@
 #include <stdio.h>
 
-typedef struct //player type object with name, left and right hand values.
+typedef struct
 {
 	int		left;
 	int		right;
 	char	name[20];
 } player;
+//player type object with name, left and right hand values.
 
 int  play_turn(player *p1, player *p2, char p1_hand, char p2_hand)
 {
@@ -31,15 +32,11 @@ int  play_turn(player *p1, player *p2, char p1_hand, char p2_hand)
         p2->left -= 5;
     if (p2->right > 4)
         p2->right -= 5;
-    //printf("p1 left :%d  ", p1->left);
-    //printf("p1 right :%d  ", p1->right);
-    //printf("p2 left :%d  ", p2->left);
-    //printf("p2 right :%d\n", p2->right);
     return (1);
 }
 //play_turn plays out each turn according to specifications and also checks
 //wether each play made is valid and returns either 0 or 1 accordingly. Also,
-//at the end of the function
+//at the end of the function, performs player.hand - 5 for correct calculations
 
 int check_win(player *alice, player *bob)
 {
@@ -88,7 +85,6 @@ int main()
     for (int i = 0; i < turns; i++)
     {
         scanf(" %c %c %c", &person, &p1_hand, &p2_hand);
-        //printf("%c, %c, %c\n", person, p1_hand, p2_hand);
         if (person == 'A')
         {
             if(!play_turn(&alice, &bob, p1_hand, p2_hand))
@@ -108,6 +104,8 @@ int main()
         if (check_win(&alice, &bob) < 3)
            break; 
     }
+	//Loop that performs turns, takes in input and checks for errors on each
+	//turn
 
     switch (check_win(&alice, &bob))
     {
@@ -124,4 +122,6 @@ int main()
         default:
             break;
     }
+	//Switch case for each possible outcome: win by hand majority, win by
+	//total opponent hand loss, and tie
 }
