@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #define MAX_MOVIES 12
 #define MAX_VOTES 50
+#define STR_SIZE 20
 
 typedef enum
 {
@@ -15,7 +16,6 @@ typedef enum
 	Fantasy,
 	Horror,
 	SciFi,
-	Unknown = -1
 }	Category;
 
 typedef struct
@@ -26,36 +26,43 @@ typedef struct
 	Category	cat_b;
 }	Movie;
 
-void	exit_msg(char *str, int status)
+// added my own function to exit with error msg, just in case of input error
+void exit_msg(char *str, int status)
 {
 	printf("%s", str);
 	exit(status);
 }
 
-Category	get_from_string(char category_name[])
+// use strcmp() to figure out which category is chosen, checks for both
+// Category and "Category" (quoted), just in case the input is quoted or not,
+// its not really clear how i should do it in the pdf. Returns (-1) by default
+// just to get around compiler warning
+Category	get_from_string(char *category_name)
 {
-	if (!strcmp(category_name, "Action"))
+	if (!strcmp(category_name, "Action") || !strcmp(category_name, "\"Action\""))
 		return (Action);
-	else if (!strcmp(category_name, "Adventure"))
+	if (!strcmp(category_name, "Adventure") || !strcmp(category_name, "\"Adventure\""))
 		return (Adventure);
-	else if (!strcmp(category_name, "Animation"))
+	if (!strcmp(category_name, "Animation") || !strcmp(category_name, "\"Animation\""))
 		return (Animation);
-	else if (!strcmp(category_name, "Comedy"))
+	if (!strcmp(category_name, "Comedy") || !strcmp(category_name, "\"Comedy\""))
 		return (Comedy);
-	else if (!strcmp(category_name, "Documentary"))
+	if (!strcmp(category_name, "Documentary") || !strcmp(category_name, "\"Documentary\""))
 		return (Documentary);
-	else if (!strcmp(category_name, "Drama"))
+	if (!strcmp(category_name, "Drama") || !strcmp(category_name, "\"Drama\""))
 		return (Drama);
-	else if (!strcmp(category_name, "Fantasy"))
+	if (!strcmp(category_name, "Fantasy") || !strcmp(category_name, "\"Fantasy\""))
 		return (Fantasy);
-	else if (!strcmp(category_name, "Horror"))
+	if (!strcmp(category_name, "Horror") || !strcmp(category_name, "\"Horror\""))
 		return (Horror);
-	else if (!strcmp(category_name, "SciFi"))
+	if (!strcmp(category_name, "SciFi") || !strcmp(category_name, "\"SciFi\""))
 		return (SciFi);
-	else
-		return (Unknown);
+	exit_msg("Category does not exist\n", 1);
+	return (-1);
 }
 
+// loop that adds 1 to score when category voted is equal to a category in the
+// movie structure
 void	voting(Category c, Movie *movies, int num_movies)
 {
 	for (int i = 0; i < num_movies; i++)
@@ -70,6 +77,9 @@ void	print_movie(Movie m)
 	printf("Name: %s\nScore: %d\n", m.name, (m.score * 10));
 }
 
+// bubble sorts the array of movies and then compares them by checking their
+// score and sorting by biggest to smallest. uses strcmp too to check lexical
+// order to sort. Then prints the first 5 movies in the array
 void	top_5_movies(Movie *movies, int num_movies)
 {
 	int		swapped;
@@ -80,11 +90,13 @@ void	top_5_movies(Movie *movies, int num_movies)
 		swapped = 0;
 		for (int j = 0; j < num_movies - i - 1; j++)
 		{
-			if (movies[i].score > movies[i + 1].score)
+			if (movies[j].score < movies[j + 1].score || 
+    			(movies[j].score == movies[j + 1].score && 
+     			strcmp(movies[j].name, movies[j + 1].name) > 0))
 			{
-				tmp = movies[i];
-				movies[i] = movies[i + 1];
-				movies[i + 1] = tmp;
+				tmp = movies[j];
+				movies[j] = movies[j + 1];
+				movies[j + 1] = tmp;
 				swapped = 1;
 			}
 		}
@@ -92,12 +104,13 @@ void	top_5_movies(Movie *movies, int num_movies)
 			break;
 	}
 
-	for (int i = 0; i < 5; i++)
-	{
+	printf("Top 5 movies:\n");
+	for (int i = 0; i < 5 && i < num_movies; i++)
 		print_movie(movies[i]);
-	}
 }
 
+// main includes prompts to know what needs to be inputted and also an exit
+// function on wrong input
 int main()
 {
 	Movie	movies[MAX_MOVIES];
@@ -109,6 +122,8 @@ int main()
 
 	printf("Input amount of movies (6 - 12): ");
 	scanf(" %d", &n_movies);
+	if (n_movies < 6)
+		exit_msg("Movie amount out of bounds\n", 1);
 	printf("Input %d movies (Format: Movie Category Category):\n", n_movies);
 	for	(int i = 0; i < n_movies; i++)
 	{
@@ -119,6 +134,8 @@ int main()
 	}
 	printf("Input amount of votes (2 - 50): ");
 	scanf(" %d", &n_votes);
+	if (n_votes < 2)
+		exit_msg("Amount of votes out of bounds\n", 1);
 	printf("Input %d votes (Format: Category):\n", n_votes);
 	for	(int i = 0; i < n_votes; i++)
 	{
