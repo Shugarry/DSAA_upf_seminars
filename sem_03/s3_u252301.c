@@ -51,7 +51,7 @@ Client	*read_clients(int *num_clients)
 		printf("Error opening file\n");
 		exit(EXIT_FAILURE);
 	}
-	while (fscanf(file, "%s %d %d ", tmp.name, &tmp.org, &tmp.dst) == 3);
+	while (fscanf(file, " %s %d %d", tmp.name, &tmp.org, &tmp.dst) == 3);
 	{
 		/*
 		if (!tmp.name[0] || tmp.org == -1 || tmp.dst == -1)
