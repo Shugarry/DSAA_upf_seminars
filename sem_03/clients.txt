@@ -2,3 +2,7 @@ Jane 2 3
 John 4 3
 Mary 1 0
 Ana 0 4
+
+Alex 16 42
+
+Pepe 202 203
