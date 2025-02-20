@@ -117,18 +117,29 @@ void	order_dst(Client **c, int in_elevator)
 
 void	board(Elevator *elevator, Client **w_c, int *waiting)
 {
-	Client	*waiting_clients = w_c;
-	Client	*tmp
+	Client	*waiting_clients = *w_c;
+	Client	*new_waiting = NULL;
+	Client	*tmp;
 	int		boarding = 0;
 
 	while (elevator->floor == waiting_clients[boarding].org)
 		boarding++;
 	*waiting -= boarding;
 	tmp = (Clients *)malloc(sizeof(Clients) * (elevator->num_clients + boarding));
-	for (int i = 0; i < elevator->num_clients; i++)
+	for (int i = 0, j = 0; i < elevator->num_clients + boarding; i++)
 	{
-		tmp[i] = elevator->clients[i];
+		if (i < elevator->num_clients)
+			tmp[i] = elevator->clients[i];
+		else
+		{
+			tmp[i] = waiting_clients[j];
+			j++;
+		}
 	}
+	free(elevator->clients);
+	elevator->clients = tmp;
+	
+	new_waiting = (Client *)malloc((*waiting) * )
 }
 
 int	main(void)
